@@ -23,9 +23,13 @@ jobs:
 
       # Step 3: Build with Maven
       - name: Build with Maven
-        run: mvn clean compile
+        run: mvn clean install
+        working-directory: ./csc120-code
 
       # Step 4: Run tests with Maven
       - name: Run tests
         run: mvn test
+        working-directory: ./csc120-code
 
+      - name: List files
+        run: ls -R
