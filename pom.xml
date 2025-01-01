@@ -2,35 +2,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>csc120</groupId>
-    <artifactId>cs120-code</artifactId>
+    <groupId>edu.college.csc</groupId>
+    <artifactId>semester-projects</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
-<build>
-  <plugins>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-surefire-plugin</artifactId>
-      <version>3.0.0-M5</version> <!-- Latest version -->
-      <configuration>
-        <includes>
-          <include>**/*Test.java</include>
-        </includes>
-      </configuration>
-    </plugin>
-  </plugins>
-</build>
+    <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-         
+    <modules>
+        <module>Lab1</module>
+        <module>Lab2</module>
+        <!-- Add additional labs here -->
+    </modules>
 </project>
