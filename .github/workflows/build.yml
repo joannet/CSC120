@@ -1,0 +1,30 @@
+name: Maven Build and Test
+
+on:
+  push:
+    branches:
+      - main  # or the branch where you want this action to run
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Runs the job on the latest Ubuntu environment
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Java 11
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'  # Java version to use
+          distribution: 'temurin'  # OpenJDK distribution
+
+      # Step 3: Build with Maven
+      - name: Build with Maven
+        run: mvn clean compile  # Command to clean and compile your code
+
+      # Step 4: Run tests with Maven
+      - name: Run tests
+        run: mvn test  # Command to run tests
