@@ -22,7 +22,6 @@ on:
 jobs:
   autograding:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -37,27 +36,5 @@ jobs:
         run: mvn clean compile
 
       - name: Run tests
-        run: |
-          # Handle case where there's no HEAD~1
-          if [ $(git rev-list --count HEAD) -eq 1 ]; then
-            echo "No previous commits. Running all tests."
-            mvn test
-          else
-            if git diff --name-only HEAD~1 | grep -q "Lab1/src/main/java/lab1/Division.java"; then
-              mvn -Dtest=lab1.DivisionTest test
-            elif git diff --name-only HEAD~1 | grep -q "Lab1/src/main/java/lab1/Caffeine.java"; then
-              mvn -Dtest=lab1.CaffeineTest test
-            elif git diff --name-only HEAD~1 | grep -q "Lab1/src/main/java/lab1/Mortgage.java"; then
-              mvn -Dtest=lab1.MortgageTest test
-            elif git diff --name-only HEAD~1 | grep -q "Lab1/src/main/java/lab1/NumSquared.java"; then
-              mvn -Dtest=lab1.NumSquaredTest test
-            elif git diff --name-only HEAD~1 | grep -q "Lab1/src/main/java/lab1/OutputWithVars.java"; then
-              mvn -Dtest=lab1.OutputWithVarsTest test
-            elif git diff --name-only HEAD~1 | grep -q "Lab1/src/main/java/lab1/Parking.java"; then
-              mvn -Dtest=lab1.ParkingTest test
-            elif git diff --name-only HEAD~1 | grep -q "Lab1/src/main/java/lab1/BasicOutput.java"; then
-              mvn -Dtest=lab1.BasicOutputTest test
-            else
-              echo "No relevant files were changed. Skipping tests."
-            fi
-          fi
+        run: mvn test
+
