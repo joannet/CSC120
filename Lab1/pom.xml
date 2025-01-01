@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>csc120</groupId>
-        <artifactId>cs120-code/artifactId>
+        <artifactId>cs120-code</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
