@@ -27,4 +27,4 @@ jobs:
 
       # Step 4: Run tests with Maven
       - name: Run tests
-        run: mvn test  # Command to run tests
+        run: mvn -X test  # Command to run tests
