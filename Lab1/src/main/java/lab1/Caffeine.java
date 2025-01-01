@@ -9,7 +9,7 @@ public class Caffeine {
 		double caffeineMg; // "double" supports floating-point like 75.5, versus int for integers like 75.       
 		double halfAmt;
             
-		System.out.println("Enter the amount of caffeine in mg. ");      
+		System.out.println("Enter the amount of caffeine in mg.");      
 		caffeineMg = scnr.nextDouble(); 
       
 		/* Type your code here. */
