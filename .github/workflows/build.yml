@@ -13,8 +13,6 @@ jobs:
       # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          path: ./Lab1  # Ensure the right path for the project
 
       # Step 2: Set up Java 11
       - name: Set up Java 11
@@ -25,8 +23,9 @@ jobs:
 
       # Step 3: Build with Maven
       - name: Build with Maven
-        run: mvn clean compile  # Command to clean and compile your code
+        run: mvn clean compile
 
       # Step 4: Run tests with Maven
       - name: Run tests
-        run: mvn -X test  # Command to run tests
+        run: mvn test
+
