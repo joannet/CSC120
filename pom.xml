@@ -27,10 +27,10 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties>
+            <build>
                 <sourceDirectory>Lab1/src/main/java</sourceDirectory>
                 <testSourceDirectory>Lab1/src/test/java</testSourceDirectory>
-            </properties>
+            </build>
         </profile>
     </profiles>
 
