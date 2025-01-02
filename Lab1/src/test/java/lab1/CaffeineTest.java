@@ -6,7 +6,7 @@ import org.junit.Test;
 public class CaffeineTest {
     @Test
     public void testAdd() {
-        Adder adder = new Adder();
+        Caffeine adder = new Caffeine();
         assertEquals(5, adder.add(2, 3));
         assertEquals(0, adder.add(-1, 1));
         assertEquals(-5, adder.add(-2, -3));
