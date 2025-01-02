@@ -3,7 +3,7 @@ package example;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-public class AdderTest {
+public class CaffeineTest {
     @Test
     public void testAdd() {
         Adder adder = new Adder();
