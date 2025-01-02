@@ -4,13 +4,9 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'Lab1/src/main/java/lab1/Adder.java'
   pull_request:
     branches:
       - main
-    paths:
-      - 'Lab1/src/main/java/lab1/Adder.java'
 
 jobs:
   build:
@@ -29,18 +25,42 @@ jobs:
       - name: Build with Maven
         run: mvn clean compile
 
-      - name: Run tests with Maven
-        run: mvn test
+      - name: Detect modified files and run tests
+        run: |
+          MODIFIED_FILES=$(git diff --name-only HEAD^)
+          if echo "$MODIFIED_FILES" | grep -q 'Lab1/src/main/java/lab1/Adder.java'; then
+            mvn -Dtest=lab1.AdderTest test
+          fi
+          if echo "$MODIFIED_FILES" | grep -q 'Lab2/src/main/java/lab2/Lab2App.java'; then
+            mvn -Dtest=lab2.Lab2AppTest test
+          fi
+          # Add more conditions for other labs as needed
 
       - name: Display test results
-        if: always()
-        run: cat target/surefire-reports/*.txt
+        run: |
+          if [ -d Lab1/target/surefire-reports ]; then
+            cat Lab1/target/surefire-reports/*.txt
+          fi
+          if [ -d Lab2/target/surefire-reports ]; then
+            cat Lab2/target/surefire-reports/*.txt
+          fi
+          # Add more conditions for other labs as needed
 
       - name: Create annotations for test failures
-        if: failure()
+        if: always()
         run: |
-          for file in target/surefire-reports/*.txt; do
-            if grep -q 'FAILURE' "$file"; then
-              echo "::error file=${{ github.workspace }}/$file::$(grep 'FAILURE' "$file")"
-            fi
-          done
+          if [ -d Lab1/target/surefire-reports ]; then
+            for file in Lab1/target/surefire-reports/*.txt; do
+              if grep -q 'FAILURE' "$file"; then
+                echo "::error file=${{ github.workspace }}/$file::$(grep 'FAILURE' "$file")"
+              fi
+            done
+          fi
+          if [ -d Lab2/target/surefire-reports ]; then
+            for file in Lab2/target/surefire-reports/*.txt; do
+              if grep -q 'FAILURE' "$file"; then
+                echo "::error file=${{ github.workspace }}/$file::$(grep 'FAILURE' "$file")"
+              fi
+            done
+          fi
+          # Add more conditions for other labs as needed
