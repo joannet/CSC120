@@ -1,6 +1,6 @@
 package example;
 
-public class Adder {
+public class Caffeine {
     public int add(int a, int b) {
         return a + b;
     }
