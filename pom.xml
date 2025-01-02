@@ -46,6 +46,41 @@
                     </includes>
                 </configuration>
             </plugin>
+
+            <!-- Build Helper Maven Plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>Lab1/src/main/java</source>
+                                <source>Lab2/src/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>Lab1/src/test/java</source>
+                                <source>Lab2/src/test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
 
         <resources>
@@ -66,21 +101,4 @@
             </testResource>
         </testResources>
     </build>
-
-    <profiles>
-        <profile>
-            <id>lab1</id>
-            <build>
-                <sourceDirectory>Lab1/src/main/java</sourceDirectory>
-                <testSourceDirectory>Lab1/src/test/java</testSourceDirectory>
-            </build>
-        </profile>
-        <profile>
-            <id>lab2</id>
-            <build>
-                <sourceDirectory>Lab2/src/main/java</sourceDirectory>
-                <testSourceDirectory>Lab2/src/test/java</testSourceDirectory>
-            </build>
-        </profile>
-    </profiles>
 </project>
