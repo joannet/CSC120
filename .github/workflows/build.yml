@@ -23,10 +23,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: mvn clean compile -P lab1
+        run: mvn clean compile
 
       - name: Run tests with Maven
-        run: mvn clean test -X -P lab1
-
-      - name: List all files in the repository
-        run: find . -type f | sort
+        run: mvn test
