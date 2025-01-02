@@ -4,14 +4,18 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'Lab1/**'  # Only trigger this job for changes in Lab1 folder
   pull_request:
     branches:
       - main
+    paths:
+      - 'Lab1/**'  # Only trigger this job for pull requests involving Lab1 folder
 
 jobs:
-  build:
+  build_lab1:
     runs-on: ubuntu-latest
-
+    if: ${{ github.event.pull_request.head.ref == 'main' && contains(github.event.head_commit.message, 'Lab1') }}  # Optional, for further filtering if necessary
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -22,8 +26,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Build with Maven
-        run: mvn clean compile
+      - name: Build with Maven (Lab 1)
+        run: mvn clean compile -Plab1
 
-      - name: Run tests with Maven
-        run: mvn test
+      - name: Run tests for Lab 1
+        run: mvn test -Plab1
