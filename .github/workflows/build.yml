@@ -46,10 +46,14 @@ jobs:
             MODIFIED_FILES=$(git ls-files)
           fi
 
+          echo "Modified files: $MODIFIED_FILES"
+
           # Run tests based on modified files
           if echo "$MODIFIED_FILES" | grep -q 'Lab1/src/main/java/lab1/Adder.java'; then
+            echo "Running Lab1 tests"
             mvn -Dtest=lab1.AdderTest test
           elif echo "$MODIFIED_FILES" | grep -q 'Lab2/src/main/java/lab2/Lab2App.java'; then
+            echo "Running Lab2 tests"
             mvn -Dtest=lab2.Lab2AppTest test
           else
             echo "No relevant files modified."
