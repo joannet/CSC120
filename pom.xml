@@ -22,6 +22,30 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>Lab1/src/main/java</sourceDirectory>
+        <testSourceDirectory>Lab1/src/test/java</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>Lab1/src/main/resources</directory>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>Lab1/src/test/resources</directory>
+            </testResource>
+        </testResources>
+        <sourceDirectory>Lab2/src/main/java</sourceDirectory>
+        <testSourceDirectory>Lab2/src/test/java</testSourceDirectory>
+        <resources>
+            <resource>
+                <directory>Lab2/src/main/resources</directory>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>Lab2/src/test/resources</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <!-- Maven Compiler Plugin -->
             <plugin>
