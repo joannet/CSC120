@@ -21,12 +21,16 @@
         </dependency>
     </dependencies>
 
-<build>
-    <sourceDirectory>Lab1/src/main/java</sourceDirectory>
-    <testSourceDirectory>Lab1/src/test/java</testSourceDirectory>
-    
-    <plugins>
-        <!-- Add any necessary plugins for compiling and testing -->
-    </plugins>
-</build>
+    <profiles>
+        <profile>
+            <id>lab1</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <sourceDirectory>Lab1/src/main/java</sourceDirectory>
+                <testSourceDirectory>Lab1/src/test/java</testSourceDirectory>
+            </build>
+        </profile>
+    </profiles>
 </project>
