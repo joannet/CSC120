@@ -22,4 +22,4 @@ jobs:
           distribution: 'temurin'
       
       - name: Build and test Lab1
-        run: mvn clean test -Plab1
+        run: mvn clean test -Plab1 -X
