@@ -28,7 +28,15 @@ jobs:
       - name: Check if Adder.java was modified
         id: check_adder
         run: |
-          if git diff --name-only HEAD^ | grep -q 'Lab1/src/main/java/lab1/Adder.java'; then echo "run_tests=true" >> $GITHUB_ENV; else echo "run_tests=false" >> $GITHUB_ENV; fi
+          if [ "$(git rev-parse --is-inside-work-tree)" == "true" ] && [ "$(git rev-list --count HEAD)" != "0" ]; then
+            if git diff --name-only HEAD^ | grep -q 'Lab1/src/main/java/lab1/Adder.java'; then
+              echo "run_tests=true" >> $GITHUB_ENV
+            else
+              echo "run_tests=false" >> $GITHUB_ENV
+            fi
+          else
+            echo "run_tests=false" >> $GITHUB_ENV
+          fi
 
       - name: Run tests with Maven
         if: env.run_tests == 'true'
