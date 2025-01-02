@@ -31,3 +31,16 @@ jobs:
 
       - name: Run tests with Maven
         run: mvn test
+
+      - name: Display test results
+        if: always()
+        run: cat target/surefire-reports/*.txt
+
+      - name: Create annotations for test failures
+        if: failure()
+        run: |
+          for file in target/surefire-reports/*.txt; do
+            if grep -q 'FAILURE' "$file"; then
+              echo "::error file=${{ github.workspace }}/$file::$(grep 'FAILURE' "$file")"
+            fi
+          done
