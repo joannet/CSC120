@@ -5,17 +5,16 @@ on:
     branches:
       - main
     paths:
-      - 'Lab1/**'  # Only trigger this job for changes in Lab1 folder
+      - 'Lab1/**'  # Only trigger the job for files in Lab1 directory
   pull_request:
     branches:
       - main
     paths:
-      - 'Lab1/**'  # Only trigger this job for pull requests involving Lab1 folder
+      - 'Lab1/**'  # Only trigger the job for pull requests affecting Lab1 folder
 
 jobs:
   build_lab1:
     runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.head.ref == 'main' && contains(github.event.head_commit.message, 'Lab1') }}  # Optional, for further filtering if necessary
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,7 +26,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven (Lab 1)
-        run: mvn clean compile -Plab1
+        run: mvn clean compile -Plab1  # Ensure lab1 profile is activated
 
       - name: Run tests for Lab 1
-        run: mvn test -Plab1
+        run: mvn test -Plab1  # Run tests with lab1 profile
