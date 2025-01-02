@@ -20,13 +20,13 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-         <build>
-    <sourceDirectory>Lab1/src/main/java</sourceDirectory>
-    <testSourceDirectory>Lab1/src/test/java</testSourceDirectory>
-    
-    <plugins>
-        <!-- Add any necessary plugins for compiling and testing -->
-    </plugins>
-</build>
-
+<profiles>
+    <profile>
+        <id>lab1</id>
+        <build>
+            <sourceDirectory>Lab1/src/main/java</sourceDirectory>
+            <testSourceDirectory>Lab1/src/test/java</testSourceDirectory>
+        </build>
+    </profile>
+</profiles>
 </project>
