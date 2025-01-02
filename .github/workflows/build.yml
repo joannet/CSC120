@@ -4,17 +4,14 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'Lab1/**'  # Only trigger the job for files in Lab1 directory
   pull_request:
     branches:
       - main
-    paths:
-      - 'Lab1/**'  # Only trigger the job for pull requests affecting Lab1 folder
 
 jobs:
-  build_lab1:
+  build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,8 +22,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Build with Maven (Lab 1)
-        run: mvn clean compile -Plab1  # Ensure lab1 profile is activated
+      - name: Build with Maven
+        run: mvn clean compile
 
-      - name: Run tests for Lab 1
-        run: mvn test -Plab1 -X # Run tests with lab1 profile
+      - name: Run tests with Maven
+        run: mvn test
