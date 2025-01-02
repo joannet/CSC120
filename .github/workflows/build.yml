@@ -30,16 +30,19 @@ jobs:
           # Check if there is a previous commit
           if [ $(git rev-list --count HEAD) -gt 1 ]; then
             MODIFIED_FILES=$(git diff --name-only HEAD^)
-            if echo "$MODIFIED_FILES" | grep -q 'Lab1/src/main/java/lab1/Adder.java'; then
-              mvn -Dtest=lab1.AdderTest test
-            fi
-            if echo "$MODIFIED_FILES" | grep -q 'Lab2/src/main/java/lab2/Lab2App.java'; then
-              mvn -Dtest=lab2.Lab2AppTest test
-            fi
-            # Add more conditions for other labs as needed
           else
-            echo "No previous commit to compare with."
+            # Handle the case where there is no previous commit
+            MODIFIED_FILES=$(git ls-files)
           fi
+
+          # Run tests based on modified files
+          if echo "$MODIFIED_FILES" | grep -q 'Lab1/src/main/java/lab1/Adder.java'; then
+            mvn -Dtest=lab1.AdderTest test
+          fi
+          if echo "$MODIFIED_FILES" | grep -q 'Lab2/src/main/java/lab2/Lab2App.java'; then
+            mvn -Dtest=lab2.Lab2AppTest test
+          fi
+          # Add more conditions for other labs as needed
 
       - name: Display test results
         run: |
