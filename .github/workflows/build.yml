@@ -26,7 +26,7 @@ jobs:
         run: mvn clean compile -P lab1
 
       - name: Run tests with Maven
-        run: mvn test -X -P lab1
+        run: mvn clean test -X -P lab1
 
       - name: List all files in the repository
         run: find . -type f | sort
