@@ -22,23 +22,12 @@
     </dependencies>
 
     <profiles>
-        <profile>
-            <id>lab1</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.8.1</version>
-                        <configuration>
-                            <source>11</source>
-                            <target>11</target>
-                            <sourceDirectory>Lab1/src/main/java</sourceDirectory>
-                            <testSourceDirectory>Lab1/src/test/java</testSourceDirectory>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+         <profile>
+        <id>lab1</id>
+        <build>
+            <sourceDirectory>Lab1/src/main/java</sourceDirectory>
+            <testSourceDirectory>Lab1/src/test/java</testSourceDirectory>
+        </build>
+         </profile>
     </profiles>
 </project>
