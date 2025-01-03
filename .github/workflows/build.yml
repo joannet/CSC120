@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-      - main 
+      - main
 
 jobs:
   build:
@@ -22,23 +22,48 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Compile and run tests
+      - name: Detect modified files and run tests
         run: |
-          # Check if there is a previous commit
+          # Fetch the list of modified files
           if [ $(git rev-list --count HEAD) -gt 1 ]; then
-            MODIFIED_MODULES=$(git diff --name-only HEAD~1 | grep '^Lab' | cut -d '/' -f 1 | sort -u)
+            MODIFIED_FILES=$(git diff --name-only HEAD~1)
           else
             # Handle the case where there is no previous commit
-            MODIFIED_MODULES=$(ls -d Lab*/)
+            MODIFIED_FILES=$(git ls-files)
           fi
 
-          echo "Modified modules: $MODIFIED_MODULES"
+          echo "Modified files: $MODIFIED_FILES"
+
+          # Extract modified modules
+          MODIFIED_MODULES=$(echo "$MODIFIED_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
 
           if [ -z "$MODIFIED_MODULES" ]; then
-            echo "No relevant modules modified."
+            echo "No relevant files modified."
           else
             for module in $MODIFIED_MODULES; do
               echo "Running tests for $module"
               mvn clean test -pl $module -am
             done
           fi
+
+      - name: Display test results
+        run: |
+          for module in $(ls -d Lab*/); do
+            if [ -d $module/target/surefire-reports ]; then
+              echo "Test results for $module:"
+              cat $module/target/surefire-reports/*.txt
+            fi
+          done
+
+      - name: Create annotations for test failures
+        if: always()
+        run: |
+          for module in $(ls -d Lab*/); do
+            if [ -d $module/target/surefire-reports ]; then
+              for file in $module/target/surefire-reports/*.txt; do
+                if grep -q 'FAILURE' "$file"; then
+                  echo "::error file=${{ github.workspace }}/$file::$(grep 'FAILURE' "$file")"
+                fi
+              done
+            fi
+          done
