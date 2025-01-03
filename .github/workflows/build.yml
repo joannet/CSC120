@@ -26,8 +26,6 @@ jobs:
 
       - name: Detect modified files and run tests
         run: |
-          set -e  # Exit immediately if a command exits with a non-zero status
-
           # Check if there is a previous commit
           if [ $(git rev-list --count HEAD) -gt 1 ]; then
             echo "Previous commit found. Checking for modified files."
@@ -41,7 +39,7 @@ jobs:
           echo "Modified files: $MODIFIED_FILES"
 
           # Filter out workflow files
-          NON_WORKFLOW_FILES=$(echo "$MODIFIED_FILES" | grep -vE '^\.github/')
+          NON_WORKFLOW_FILES=$(echo "$MODIFIED_FILES" | grep -vE '^\.github/' || true)
 
           echo "Non-workflow files: $NON_WORKFLOW_FILES"
 
@@ -51,7 +49,7 @@ jobs:
           fi
 
           # Extract modified modules
-          MODIFIED_MODULES=$(echo "$NON_WORKFLOW_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
+          MODIFIED_MODULES=$(echo "$NON_WORKFLOW_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u || true)
 
           echo "Modified modules: $MODIFIED_MODULES"
 
