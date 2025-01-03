@@ -42,7 +42,9 @@ jobs:
           echo "Modified files: $MODIFIED_FILES"
 
           # Check if only workflow files were modified
-          if echo "$MODIFIED_FILES" | grep -qvE '\.github/'; then
+          if echo "$MODIFIED_FILES" | grep -qE '^\.github/'; then
+            echo "Only workflow files modified, skipping tests."
+          else
             # Extract modified modules
             MODIFIED_MODULES=$(echo "$MODIFIED_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
 
@@ -54,8 +56,6 @@ jobs:
                 mvn test -pl $module -am
               done
             fi
-          else
-            echo "Only workflow files modified, skipping tests."
           fi
 
       - name: Display test results
