@@ -30,9 +30,11 @@ jobs:
 
           # Check if there is a previous commit
           if [ $(git rev-list --count HEAD) -gt 1 ]; then
+            echo "Previous commit found. Checking for modified files."
             MODIFIED_FILES=$(git diff --name-only HEAD~1)
           else
             # Handle the case where there is no previous commit
+            echo "No previous commit found. Listing all files."
             MODIFIED_FILES=$(git ls-files)
           fi
 
@@ -41,6 +43,8 @@ jobs:
           # Filter out workflow files
           NON_WORKFLOW_FILES=$(echo "$MODIFIED_FILES" | grep -vE '^\.github/')
 
+          echo "Non-workflow files: $NON_WORKFLOW_FILES"
+
           if [ -z "$NON_WORKFLOW_FILES" ]; then
             echo "Only workflow files modified, skipping tests."
             exit 0
@@ -48,6 +52,8 @@ jobs:
 
           # Extract modified modules
           MODIFIED_MODULES=$(echo "$NON_WORKFLOW_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
+
+          echo "Modified modules: $MODIFIED_MODULES"
 
           if [ -z "$MODIFIED_MODULES" ]; then
             echo "No relevant files modified."
