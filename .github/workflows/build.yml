@@ -43,19 +43,21 @@ jobs:
 
           if [ -z "$NON_WORKFLOW_FILES" ]; then
             echo "Only workflow files modified, skipping tests."
-          else
-            # Extract modified modules
-            MODIFIED_MODULES=$(echo "$NON_WORKFLOW_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
-
-            if [ -z "$MODIFIED_MODULES" ]; then
-              echo "No relevant files modified."
-            else
-              for module in $MODIFIED_MODULES; do
-                echo "Running tests for $module"
-                mvn clean test -pl $module -am
-              done
-            fi
+            exit 0
           fi
+
+          # Extract modified modules
+          MODIFIED_MODULES=$(echo "$NON_WORKFLOW_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
+
+          if [ -z "$MODIFIED_MODULES" ]; then
+            echo "No relevant files modified."
+            exit 0
+          fi
+
+          for module in $MODIFIED_MODULES; do
+            echo "Running tests for $module"
+            mvn clean test -pl $module -am
+          done
 
       - name: Display test results
         run: |
