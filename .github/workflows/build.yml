@@ -26,6 +26,8 @@ jobs:
 
       - name: Detect modified files and run tests
         run: |
+          set -e  # Exit immediately if a command exits with a non-zero status
+
           # Check if there is a previous commit
           if [ $(git rev-list --count HEAD) -gt 1 ]; then
             MODIFIED_FILES=$(git diff --name-only HEAD~1)
