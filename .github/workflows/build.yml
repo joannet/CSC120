@@ -83,19 +83,6 @@ jobs:
             fi
           done
 
-      - name: Create annotations for test failures
-        if: always()
-        run: |
-          for module in $(ls -d Lab*/); do
-            if [ -d $module/target/surefire-reports ]; then
-              for file in $module/target/surefire-reports/*.txt; do
-                if grep -q 'FAILURE' "$file"; then
-                  echo "::error file=${{ github.workspace }}/$file::$(grep 'FAILURE' "$file")"
-                fi
-              done
-            fi
-          done
-
       - name: Fail the workflow if tests failed
         if: failure() && steps.test.outcome == 'failure'
         run: exit 1
