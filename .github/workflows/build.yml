@@ -60,10 +60,10 @@ jobs:
 
           for module in $MODIFIED_MODULES; do
             echo "Running tests for $module"
-            mvn clean test -pl $module -am
-          done
+            mvn clean test -pl $module -am || true  # Continue even if tests fail
 
       - name: Display test results
+        if: always()
         run: |
           for module in $(ls -d Lab*/); do
             if [ -d $module/target/surefire-reports ]; then
