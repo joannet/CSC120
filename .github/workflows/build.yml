@@ -61,6 +61,7 @@ jobs:
           for module in $MODIFIED_MODULES; do
             echo "Running tests for $module"
             mvn clean test -pl $module -am || true  # Continue even if tests fail
+          done
 
       - name: Display test results
         if: always()
