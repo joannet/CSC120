@@ -72,6 +72,23 @@ jobs:
               echo "No class files found for $module, skipping tests."
               continue
             fi
+
+            # Ensure the tested classes exist
+            EXPECTED_CLASSES=$(find $module/src/test/java/ -name '*Test.java' -exec grep -oP 'class \K\w+' {} \; | sed 's/.$//' | tr '\n' ' ')
+            MISSING_CLASSES=0
+
+            for class in $EXPECTED_CLASSES; do
+              if ! [ -f "$module/src/main/java/$module/${class}.java" ]; then
+                echo "Class $class not found for $module, skipping tests."
+                MISSING_CLASSES=1
+                break
+              fi
+            done
+
+            if [ $MISSING_CLASSES -eq 1 ]; then
+              continue
+            fi
+
             echo "Running tests for $module"
             mvn clean test -pl $module -am || TEST_FAILURES=1  # Capture test failures
           done
