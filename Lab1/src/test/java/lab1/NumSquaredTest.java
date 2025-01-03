@@ -21,7 +21,7 @@ public class NumSquaredTest {
 	public void setUpStreams() {
 	    System.setOut(new PrintStream(outContent));
 	}
-
+	
 	@After
 	public void cleanUpStreams() {
 	    System.setOut(originalPrintStream);
