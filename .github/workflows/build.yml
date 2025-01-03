@@ -47,7 +47,7 @@ jobs:
 
           if [ -z "$NON_WORKFLOW_FILES" ]; then
             echo "Only workflow files modified, skipping tests."
-            exit 0
+            exit 0  # Exit with success
           fi
 
           # Extract modified modules
@@ -57,7 +57,7 @@ jobs:
 
           if [ -z "$MODIFIED_MODULES" ]; then
             echo "No relevant files modified."
-            exit 0
+            exit 0  # Exit with success
           fi
 
           for module in $MODIFIED_MODULES; do
