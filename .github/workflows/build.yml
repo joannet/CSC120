@@ -41,16 +41,21 @@ jobs:
 
           echo "Modified files: $MODIFIED_FILES"
 
-          # Extract modified modules
-          MODIFIED_MODULES=$(echo "$MODIFIED_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
+          # Check if only workflow files were modified
+          if echo "$MODIFIED_FILES" | grep -qvE '\.github/'; then
+            # Extract modified modules
+            MODIFIED_MODULES=$(echo "$MODIFIED_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
 
-          if [ -z "$MODIFIED_MODULES" ]; then
-            echo "No relevant files modified."
+            if [ -z "$MODIFIED_MODULES" ]; then
+              echo "No relevant files modified."
+            else
+              for module in $MODIFIED_MODULES; do
+                echo "Running tests for $module"
+                mvn test -pl $module -am
+              done
+            fi
           else
-            for module in $MODIFIED_MODULES; do
-              echo "Running tests for $module"
-              mvn test -pl $module -am
-            done
+            echo "Only workflow files modified, skipping tests."
           fi
 
       - name: Display test results
