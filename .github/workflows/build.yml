@@ -25,6 +25,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Detect modified files and run tests
+        id: test  # Adding an id to reference this step later
         run: |
           # Check if there is a previous commit
           if [ $(git rev-list --count HEAD) -gt 1 ]; then
@@ -58,10 +59,13 @@ jobs:
             exit 0  # Exit with success
           fi
 
+          TEST_FAILURES=0
           for module in $MODIFIED_MODULES; do
             echo "Running tests for $module"
-            mvn clean test -pl $module -am || true  # Continue even if tests fail
+            mvn clean test -pl $module -am || TEST_FAILURES=1  # Capture test failures
           done
+
+          exit $TEST_FAILURES  # Exit with the test failures status
 
       - name: Display test results
         if: always()
@@ -85,3 +89,7 @@ jobs:
               done
             fi
           done
+
+      - name: Fail the workflow if tests failed
+        if: failure() && steps.test.outcome == 'failure'
+        run: exit 1
