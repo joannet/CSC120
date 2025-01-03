@@ -1,4 +1,4 @@
-name: Java CI
+name: CI
 
 on:
   push:
@@ -24,64 +24,41 @@ jobs:
 
       - name: List source files
         run: |
-          echo "Listing source files in Lab1:"
-          find Lab1/src/main/java -type f
-          echo "Listing test files in Lab1:"
-          find Lab1/src/test/java -type f
-          echo "Listing source files in Lab2:"
-          find Lab2/src/main/java -type f
-          echo "Listing test files in Lab2:"
-          find Lab2/src/test/java -type f
+          find . -type f
 
       - name: Build with Maven
         run: mvn clean compile
 
       - name: Detect modified files and run tests
         run: |
-          # Check if there is a previous commit
-          if [ $(git rev-list --count HEAD) -gt 1 ]; then
-            MODIFIED_FILES=$(git diff --name-only HEAD^)
-          else
-            # Handle the case where there is no previous commit
-            MODIFIED_FILES=$(git ls-files)
-          fi
+          MODIFIED_MODULES=$(git diff --name-only HEAD^ | grep '^Lab' | cut -d '/' -f 1 | sort -u)
 
-          echo "Modified files: $MODIFIED_FILES"
-
-          # Run tests based on modified files
-          if echo "$MODIFIED_FILES" | grep -q 'Lab1/src/main/java/lab1/Adder.java'; then
-            echo "Running Lab1 tests"
-            mvn -Dtest=lab1.AdderTest test
-          elif echo "$MODIFIED_FILES" | grep -q 'Lab2/src/main/java/lab2/Lab2App.java'; then
-            echo "Running Lab2 tests"
-            mvn -Dtest=lab2.Lab2AppTest test
-          else
+          if [ -z "$MODIFIED_MODULES" ]; then
             echo "No relevant files modified."
+          else
+            for module in $MODIFIED_MODULES; do
+              echo "Running tests for $module"
+              mvn -pl $module test
+            done
           fi
 
       - name: Display test results
         run: |
-          if [ -d Lab1/target/surefire-reports ]; then
-            cat Lab1/target/surefire-reports/*.txt
-          fi
-          if [ -d Lab2/target/surefire-reports ]; then
-            cat Lab2/target/surefire-reports/*.txt
-          fi
+          for module in $(ls -d Lab*/); do
+            if [ -d $module/target/surefire-reports ]; then
+              cat $module/target/surefire-reports/*.txt
+            fi
+          done
 
       - name: Create annotations for test failures
         if: always()
         run: |
-          if [ -d Lab1/target/surefire-reports ]; then
-            for file in Lab1/target/surefire-reports/*.txt; do
-              if grep -q 'FAILURE' "$file"; then
-                echo "::error file=${{ github.workspace }}/$file::$(grep 'FAILURE' "$file")"
-              fi
-            done
-          fi
-          if [ -d Lab2/target/surefire-reports ]; then
-            for file in Lab2/target/surefire-reports/*.txt; do
-              if grep -q 'FAILURE' "$file"; then
-                echo "::error file=${{ github.workspace }}/$file::$(grep 'FAILURE' "$file")"
-              fi
-            done
-          fi
+          for module in $(ls -d Lab*/); do
+            if [ -d $module/target/surefire-reports ]; then
+              for file in $module/target/surefire-reports/*.txt; do
+                if grep -q 'FAILURE' "$file"; then
+                  echo "::error file=${{ github.workspace }}/$file::$(grep 'FAILURE' "$file")"
+                fi
+              done
+            fi
+          done
