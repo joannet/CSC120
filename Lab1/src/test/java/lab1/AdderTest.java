@@ -7,8 +7,14 @@ public class AdderTest {
     @Test
     public void testAdd() {
         Adder adder = new Adder();
-        assertEquals(5, adder.add(2, 3));
-        assertEquals(0, adder.add(-1, 1));
-        assertEquals(-5, adder.add(-2, -3));
+
+        // Test case: 2 + 3 = 5
+        assertEquals("Expected 2 + 3 to equal 5", 5, adder.add(2, 3));
+
+        // Test case: -1 + 1 = 0
+        assertEquals("Expected -1 + 1 to equal 0", 0, adder.add(-1, 1));
+
+        // Test case: -2 + -3 = -5
+        assertEquals("Expected -2 + -3 to equal -5", -5, adder.add(-2, -3));
     }
 }
