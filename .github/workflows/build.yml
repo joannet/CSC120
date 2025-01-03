@@ -31,7 +31,18 @@ jobs:
 
       - name: Detect modified files and run tests
         run: |
-          MODIFIED_MODULES=$(git diff --name-only HEAD^ | grep '^Lab' | cut -d '/' -f 1 | sort -u)
+          # Check if there is a previous commit
+          if [ $(git rev-list --count HEAD) -gt 1 ]; then
+            MODIFIED_FILES=$(git diff --name-only HEAD~1)
+          else
+            # Handle the case where there is no previous commit
+            MODIFIED_FILES=$(git ls-files)
+          fi
+
+          echo "Modified files: $MODIFIED_FILES"
+
+          # Extract modified modules
+          MODIFIED_MODULES=$(echo "$MODIFIED_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
 
           if [ -z "$MODIFIED_MODULES" ]; then
             echo "No relevant files modified."
