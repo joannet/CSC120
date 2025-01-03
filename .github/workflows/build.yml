@@ -61,12 +61,6 @@ jobs:
 
           TEST_FAILURES=0
           for module in $MODIFIED_MODULES; do
-            # Check if the module has corresponding class files
-            CLASS_FILES=$(find src/main/java/${module,,} -name '*.java' || true)
-            if [ -z "$CLASS_FILES" ]; then
-              echo "No class files found for $module, skipping tests."
-              continue
-            fi
             echo "Running tests for $module"
             mvn clean test -pl $module -am || TEST_FAILURES=1  # Capture test failures
           done
