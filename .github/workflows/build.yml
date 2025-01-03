@@ -44,7 +44,7 @@ jobs:
 
           echo "Modified files: $MODIFIED_FILES"
 
-          # Filter out workflow files and starter code
+          # Filter out workflow files
           NON_WORKFLOW_FILES=$(echo "$MODIFIED_FILES" | grep -vE '^(\.github/|starter-code/)' || true)
 
           echo "Non-workflow files: $NON_WORKFLOW_FILES"
