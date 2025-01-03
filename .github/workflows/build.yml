@@ -1,4 +1,4 @@
-name: Build and Test
+name: CI
 
 on:
   push:
@@ -24,8 +24,13 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
       - name: Detect modified files and run tests
-        id: test  # Adding an id to reference this step later
+        id: test
         run: |
           # Check if there is a previous commit
           if [ $(git rev-list --count HEAD) -gt 1 ]; then
@@ -82,6 +87,18 @@ jobs:
               cat $module/target/surefire-reports/*.txt
             fi
           done
+
+      - name: Run grading script
+        if: always()
+        run: |
+          python grade.py
+
+      - name: Upload grade report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: grade-report
+          path: grade_report.txt
 
       - name: Fail the workflow if tests failed
         if: failure() && steps.test.outcome == 'failure'
