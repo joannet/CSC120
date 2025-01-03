@@ -49,7 +49,7 @@ jobs:
           else
             for module in $MODIFIED_MODULES; do
               echo "Running tests for $module"
-              mvn -pl $module test
+              mvn test -pl $module -am
             done
           fi
 
