@@ -44,13 +44,13 @@ jobs:
 
           echo "Modified files: $MODIFIED_FILES"
 
-          # Filter out workflow files
-          NON_WORKFLOW_FILES=$(echo "$MODIFIED_FILES" | grep -vE '^\.github/' || true)
+          # Filter out workflow files and starter code
+          NON_WORKFLOW_FILES=$(echo "$MODIFIED_FILES" | grep -vE '^(\.github/|starter-code/)' || true)
 
           echo "Non-workflow files: $NON_WORKFLOW_FILES"
 
           if [ -z "$NON_WORKFLOW_FILES" ]; then
-            echo "Only workflow files modified, skipping tests."
+            echo "Only workflow or starter code files modified, skipping tests."
             exit 0  # Exit with success
           fi
 
