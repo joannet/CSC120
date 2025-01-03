@@ -42,11 +42,13 @@ jobs:
           echo "Modified files: $MODIFIED_FILES"
 
           # Check if only workflow files were modified
-          if echo "$MODIFIED_FILES" | grep -qE '^\.github/'; then
+          NON_WORKFLOW_FILES=$(echo "$MODIFIED_FILES" | grep -vE '^\.github/')
+
+          if [ -z "$NON_WORKFLOW_FILES" ]; then
             echo "Only workflow files modified, skipping tests."
           else
             # Extract modified modules
-            MODIFIED_MODULES=$(echo "$MODIFIED_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
+            MODIFIED_MODULES=$(echo "$NON_WORKFLOW_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u)
 
             if [ -z "$MODIFIED_MODULES" ]; then
               echo "No relevant files modified."
