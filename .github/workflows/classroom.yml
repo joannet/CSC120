@@ -1,0 +1,122 @@
+name: Classroom Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2  # Ensure we fetch the previous commit
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Detect modified files and run tests
+        id: test
+        run: |
+          # Check if there is a previous commit
+          if [ $(git rev-list --count HEAD) -gt 1 ]; then
+            echo "Previous commit found. Checking for modified files."
+            MODIFIED_FILES=$(git diff --name-only HEAD~1)
+          else
+            # Handle the case where there is no previous commit
+            echo "No previous commit found. Listing all files."
+            MODIFIED_FILES=$(git ls-files)
+          fi
+
+          echo "Modified files: $MODIFIED_FILES"
+
+          # Filter out workflow files
+          NON_WORKFLOW_FILES=$(echo "$MODIFIED_FILES" | grep -vE '^(\.github/|starter-code/)' || true)
+
+          echo "Non-workflow files: $NON_WORKFLOW_FILES"
+
+          if [ -z "$NON_WORKFLOW_FILES" ]; then
+            echo "Only workflow or starter code files modified, skipping tests."
+            exit 0  # Exit with success
+          fi
+
+          # Extract modified modules
+          MODIFIED_MODULES=$(echo "$NON_WORKFLOW_FILES" | grep '^Lab' | cut -d '/' -f 1 | sort -u || true)
+
+          echo "Modified modules: $MODIFIED_MODULES"
+
+          if [ -z "$MODIFIED_MODULES" ]; then
+            echo "No relevant files modified."
+            exit 0  # Exit with success
+          fi
+
+          TEST_FAILURES=0
+          for module in $MODIFIED_MODULES; do
+            # Check if the module has corresponding class files
+            CLASS_FILES=$(find $module/src/main/java/ -name '*.java' || true)
+            if [ -z "$CLASS_FILES" ]; then
+              echo "No class files found for $module, skipping tests."
+              continue
+            fi
+
+            # Ensure the tested classes exist
+            EXPECTED_CLASSES=$(find $module/src/test/java/ -name '*Test.java' -exec grep -oP 'class \K\w+' {} \; | sed 's/.$//' | tr '\n' ' ')
+            MISSING_CLASSES=0
+
+            for class in $EXPECTED_CLASSES; do
+              if ! [ -f "$module/src/main/java/$module/${class}.java" ]; then
+                echo "Class $class not found for $module, skipping tests."
+                MISSING_CLASSES=1
+                break
+              fi
+            done
+
+            if [ $MISSING_CLASSES -eq 1 ]; then
+              continue
+            fi
+
+            echo "Running tests for $module"
+            mvn clean test -pl $module -am || TEST_FAILURES=1  # Capture test failures
+          done
+
+          exit $TEST_FAILURES  # Exit with the test failures status
+
+      - name: Display test results
+        if: always()
+        run: |
+          for module in $(ls -d Lab*/); do
+            if [ -d $module/target/surefire-reports ]; then
+              echo "Test results for $module:"
+              cat $module/target/surefire-reports/*.txt
+            fi
+          done
+
+      - name: Run grading script
+        if: always()
+        run: |
+          python grade.py
+
+      - name: Upload grade report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: grade-report
+          path: grade_report.txt
+
+      - name: Fail the workflow if tests failed
+        if: failure() && steps.test.outcome == 'failure'
+        run: exit 1
